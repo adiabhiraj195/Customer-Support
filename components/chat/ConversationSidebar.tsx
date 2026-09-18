@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, MessageSquare, Plus, Trash2 } from "lucide-react";
+import { Clock, Loader2, MessageSquare, Plus, ShieldAlert, Trash2 } from "lucide-react";
 import { useConversations } from "@/hooks/useConversations";
+import { useAuth } from "@/hooks/useAuth";
 import { useUIStore } from "@/stores/uiStore";
+import { Button } from "@/components/ui/Button";
 
 export function ConversationSidebar() {
+  const { user } = useAuth();
+  const isAgentPending =
+    user?.role === "Support Agent" && user?.status === "PENDING_APPROVAL";
+
   const {
     conversations,
     isLoading,
@@ -45,9 +51,21 @@ export function ConversationSidebar() {
   };
 
   return (
-    <aside className="flex flex-col w-full md:w-72 lg:w-80 h-full border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50">
+    <aside className="flex flex-col w-full md:w-72 lg:w-80 h-full border-r border-border bg-card-muted/40">
       {/* Top action bar */}
-      <div className="p-3 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="p-3 border-b border-border space-y-2">
+        {isAgentPending && (
+          <div className="rounded-xl border border-warning-border bg-warning-subtle p-2.5 text-[11px] text-warning-subtle-foreground space-y-1">
+            <div className="flex items-center gap-1.5 font-semibold">
+              <Clock className="h-3.5 w-3.5 text-warning shrink-0" />
+              <span>Pending Admin Approval</span>
+            </div>
+            <p className="text-[10px] opacity-90 leading-tight">
+              Support Agents must be approved by an Admin before creating conversations or handling tasks.
+            </p>
+          </div>
+        )}
+
         {isAdding ? (
           <form onSubmit={handleCreate} className="flex items-center gap-1.5">
             <input
@@ -56,46 +74,56 @@ export function ConversationSidebar() {
               placeholder="Conversation title..."
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="flex-1 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none"
+              className="flex-1 rounded-xl border border-border bg-card px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
-            <button
+            <Button
               type="submit"
+              size="xs"
+              isLoading={isCreating}
               disabled={isCreating}
-              className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {isCreating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
-            </button>
-            <button
+              Save
+            </Button>
+            <Button
               type="button"
+              variant="outline"
+              size="xs"
               onClick={() => setIsAdding(false)}
-              className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-2 py-1.5 text-xs text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               Cancel
-            </button>
+            </Button>
           </form>
         ) : (
-          <button
+          <Button
             onClick={() => setIsAdding(true)}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white py-2 text-xs font-medium shadow-xs transition"
+            size="sm"
+            disabled={isAgentPending}
+            leftIcon={
+              isAgentPending ? (
+                <ShieldAlert className="h-3.5 w-3.5 text-warning" />
+              ) : (
+                <Plus className="h-3.5 w-3.5" />
+              )
+            }
+            className="w-full"
           >
-            <Plus className="h-3.5 w-3.5" />
-            <span>New Conversation</span>
-          </button>
+            {isAgentPending ? "Locked (Awaiting Approval)" : "New Conversation"}
+          </Button>
         )}
       </div>
 
       {/* Conversations List */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center p-8 text-zinc-400">
-            <Loader2 className="h-5 w-5 animate-spin mb-2" />
+          <div className="flex flex-col items-center justify-center p-8 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin mb-2 text-primary" />
             <span className="text-xs">Loading conversations...</span>
           </div>
         ) : conversations.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-8 text-center text-zinc-400">
-            <MessageSquare className="h-8 w-8 stroke-1 mb-2 text-zinc-300 dark:text-zinc-700" />
-            <p className="text-xs font-medium text-zinc-500">No conversations yet</p>
-            <p className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
+            <MessageSquare className="h-8 w-8 stroke-1 mb-2 opacity-40" />
+            <p className="text-xs font-semibold text-foreground">No conversations yet</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
               Click &quot;New Conversation&quot; to start chatting.
             </p>
           </div>
@@ -112,23 +140,23 @@ export function ConversationSidebar() {
               <div
                 key={conv.id}
                 onClick={() => setSelectedConversationId(conv.id)}
-                className={`group relative flex items-center justify-between rounded-xl px-3 py-2.5 cursor-pointer transition text-xs ${
+                className={`group relative flex items-center justify-between rounded-xl px-3 py-2.5 cursor-pointer transition-all text-xs ${
                   isSelected
-                    ? "bg-blue-50 text-blue-900 font-medium dark:bg-blue-950/40 dark:text-blue-100 border border-blue-200/60 dark:border-blue-800/40"
-                    : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900 border border-transparent"
+                    ? "bg-primary-subtle text-primary-subtle-foreground font-semibold border border-primary/25 shadow-2xs"
+                    : "text-foreground/80 hover:bg-accent hover:text-foreground border border-transparent"
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0 pr-2">
                   <MessageSquare
                     className={`h-4 w-4 shrink-0 ${
                       isSelected
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
+                        ? "text-primary"
+                        : "text-muted-foreground group-hover:text-foreground"
                     }`}
                   />
                   <div className="truncate">
                     <p className="truncate font-medium">{conv.title || "Untitled Chat"}</p>
-                    <div className="flex items-center gap-2 text-[10px] text-zinc-400 mt-0.5">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
                       <span>{updatedDate}</span>
                       {msgCount > 0 && (
                         <>
@@ -144,11 +172,12 @@ export function ConversationSidebar() {
                 <button
                   onClick={(e) => handleDelete(e, conv.id)}
                   disabled={deletingId === conv.id}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-opacity"
+                  className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive-subtle transition-all"
                   title="Delete Conversation"
+                  aria-label="Delete Conversation"
                 >
                   {deletingId === conv.id ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-rose-500" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-destructive" />
                   ) : (
                     <Trash2 className="h-3.5 w-3.5" />
                   )}
@@ -161,4 +190,3 @@ export function ConversationSidebar() {
     </aside>
   );
 }
-

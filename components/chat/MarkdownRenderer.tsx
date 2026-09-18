@@ -32,19 +32,19 @@ function CodeBlock({
   };
 
   return (
-    <div className="my-3 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 text-zinc-100 text-xs shadow-xs">
+    <div className="my-3 rounded-xl overflow-hidden border border-border/80 bg-zinc-950 text-zinc-100 text-xs shadow-2xs">
       <div className="flex items-center justify-between px-3.5 py-1.5 bg-zinc-900/90 border-b border-zinc-800 text-[11px] text-zinc-400 font-mono">
         <span>{language || "code"}</span>
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1 hover:text-zinc-200 transition-colors py-0.5 px-1.5 rounded hover:bg-zinc-800"
+          className="flex items-center gap-1 hover:text-zinc-100 transition-colors py-0.5 px-1.5 rounded hover:bg-zinc-800"
           title="Copy code"
         >
           {copied ? (
             <>
               <Check className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="text-[10px] text-emerald-400">Copied</span>
+              <span className="text-[10px] text-emerald-400 font-medium">Copied</span>
             </>
           ) : (
             <>
@@ -77,7 +77,7 @@ export function MarkdownRenderer({
             <p className="mb-2.5 last:mb-0 leading-relaxed">{children}</p>
           ),
           h1: ({ children }) => (
-            <h1 className="text-base font-bold mt-3 mb-2 pb-1 border-b border-zinc-200 dark:border-zinc-700/60">
+            <h1 className="text-base font-bold mt-3 mb-2 pb-1 border-b border-border">
               {children}
             </h1>
           ),
@@ -104,8 +104,8 @@ export function MarkdownRenderer({
             <blockquote
               className={
                 isUser
-                  ? "border-l-2 border-white/60 pl-3 my-2 italic text-blue-100"
-                  : "border-l-2 border-blue-500 pl-3 my-2 italic text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-800/40 py-1 rounded-r-lg"
+                  ? "border-l-2 border-white/60 pl-3 my-2 italic text-primary-foreground/90"
+                  : "border-l-2 border-primary pl-3 my-2 italic text-muted-foreground bg-card-muted/80 py-1 rounded-r-xl"
               }
             >
               {children}
@@ -122,45 +122,39 @@ export function MarkdownRenderer({
               rel="noopener noreferrer"
               className={
                 isUser
-                  ? "underline font-medium text-blue-100 hover:text-white"
-                  : "underline font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                  ? "underline font-medium text-white hover:text-white/80"
+                  : "underline font-medium text-primary hover:text-primary-hover"
               }
             >
               {children}
             </a>
           ),
           table: ({ children }) => (
-            <div className="my-3 overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700">
-              <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700 text-xs text-left">
+            <div className="my-3 overflow-x-auto rounded-xl border border-border">
+              <table className="min-w-full divide-y divide-border text-xs text-left">
                 {children}
               </table>
             </div>
           ),
           thead: ({ children }) => (
-            <thead className="bg-zinc-100 dark:bg-zinc-800/80 font-semibold text-zinc-900 dark:text-zinc-100">
+            <thead className="bg-card-muted font-semibold text-foreground">
               {children}
             </thead>
           ),
           tbody: ({ children }) => (
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
-              {children}
-            </tbody>
+            <tbody className="divide-y divide-border/60">{children}</tbody>
           ),
           th: ({ children }) => (
             <th className="px-3 py-2 font-semibold">{children}</th>
           ),
           td: ({ children }) => <td className="px-3 py-2">{children}</td>,
           tr: ({ children }) => (
-            <tr className="even:bg-zinc-50/50 dark:even:bg-zinc-800/30">
-              {children}
-            </tr>
+            <tr className="even:bg-card-muted/40">{children}</tr>
           ),
           hr: () => (
             <hr
               className={
-                isUser
-                  ? "my-3 border-white/20"
-                  : "my-3 border-zinc-200 dark:border-zinc-700"
+                isUser ? "my-3 border-white/20" : "my-3 border-border"
               }
             />
           ),
@@ -169,7 +163,6 @@ export function MarkdownRenderer({
             const hasMultipleLines = String(children).includes("\n");
             const hasLanguage = /language-(\w+)/.test(codeClassName || "");
 
-            // If multiline or explicitly tagged with language, render as a formatted CodeBlock
             if (hasMultipleLines || hasLanguage) {
               return (
                 <CodeBlock className={codeClassName} {...props}>
@@ -178,13 +171,12 @@ export function MarkdownRenderer({
               );
             }
 
-            // Inline code snippet
             return (
               <code
                 className={
                   isUser
-                    ? "bg-blue-700/70 text-blue-50 font-mono text-[12px] px-1.5 py-0.5 rounded"
-                    : "bg-zinc-100 dark:bg-zinc-800 text-rose-600 dark:text-rose-400 font-mono text-[12px] px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700/60"
+                    ? "bg-white/20 text-white font-mono text-[12px] px-1.5 py-0.5 rounded"
+                    : "bg-card-muted text-primary font-mono text-[12px] px-1.5 py-0.5 rounded border border-border"
                 }
                 {...props}
               >
@@ -199,4 +191,3 @@ export function MarkdownRenderer({
     </div>
   );
 }
-

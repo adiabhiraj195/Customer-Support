@@ -1,10 +1,35 @@
+export type UserRole = "Admin" | "Customer" | "Support Agent";
+export type UserStatus = "ACTIVE" | "PENDING_APPROVAL" | "REJECTED";
+
+export interface Organisation {
+  id: string;
+  name: string;
+  type?: string;
+  config?: Record<string, unknown>;
+  createdAt?: string;
+  _count?: {
+    users?: number;
+  };
+}
+
 export interface User {
   id: string;
   email: string;
   name?: string | null;
-  role?: string;
+  role?: UserRole | string;
+  status?: UserStatus | string;
+  isVerified?: boolean;
+  organisationId?: string;
+  organisation?: Organisation;
   createdAt: string;
   updatedAt?: string;
+}
+
+export interface OrganisationsResponse {
+  success: boolean;
+  data: {
+    organisations: Organisation[];
+  };
 }
 
 export interface AuthResponse {
@@ -13,6 +38,7 @@ export interface AuthResponse {
   data: {
     token: string;
     user: User;
+    organisation?: Organisation;
   };
 }
 
@@ -20,7 +46,36 @@ export interface RegisterRequest {
   email: string;
   password: string;
   name?: string;
-  role?: string;
+  role?: UserRole | string;
+  organisationName?: string;
+  organisationType?: string;
+  organisationConfig?: Record<string, unknown>;
+  organisationId?: string;
+}
+
+export interface RegisterAdminRequest {
+  email: string;
+  password: string;
+  name?: string;
+  organisationName: string;
+  organisationType?: string;
+  organisationConfig?: Record<string, unknown>;
+}
+
+export interface RegisterCustomerRequest {
+  email: string;
+  password: string;
+  name?: string;
+  organisationId?: string;
+  organisationName?: string;
+}
+
+export interface RegisterSupportAgentRequest {
+  email: string;
+  password: string;
+  name?: string;
+  organisationId?: string;
+  organisationName?: string;
 }
 
 export interface LoginRequest {
@@ -32,6 +87,15 @@ export interface ProfileResponse {
   success: boolean;
   data: {
     user: User;
+  };
+}
+
+export interface SupportAgentResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    agents?: User[];
+    agent?: User;
   };
 }
 

@@ -9,9 +9,13 @@ import { useUIStore } from "@/stores/uiStore";
 import { MessageBubble } from "./MessageBubble";
 import { ChatInput } from "./ChatInput";
 import { SendMessageRequest } from "@/types/api";
+import { Button } from "@/components/ui/Button";
 
 export function ChatArea() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const isAgentPending =
+    user?.role === "Support Agent" && user?.status === "PENDING_APPROVAL";
+
   const { selectedConversationId } = useUIStore();
   const {
     conversation,
@@ -31,28 +35,24 @@ export function ChatArea() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 mb-3">
+      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center bg-background">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-subtle text-primary mb-3">
           <Bot className="h-6 w-6" />
         </div>
-        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-1">
+        <h3 className="text-base font-bold text-foreground mb-1">
           Authentication Required
         </h3>
-        <p className="text-xs text-zinc-500 max-w-sm mb-4">
+        <p className="text-xs text-muted-foreground max-w-sm mb-4">
           Sign in to load your conversations or start a new persistent chat with the RAG knowledge assistant.
         </p>
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="rounded-xl bg-blue-600 px-4 py-2 text-xs font-medium text-white hover:bg-blue-700 transition"
-          >
-            Sign In
+          <Link href="/login">
+            <Button size="sm">Sign In</Button>
           </Link>
-          <Link
-            href="/signup"
-            className="rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
-          >
-            Sign Up
+          <Link href="/signup">
+            <Button variant="outline" size="sm">
+              Sign Up
+            </Button>
           </Link>
         </div>
       </div>
@@ -61,14 +61,14 @@ export function ChatArea() {
 
   if (!selectedConversationId) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center text-zinc-400">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-zinc-800/80 mb-3">
-          <MessageSquare className="h-7 w-7 text-zinc-400" />
+      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center text-muted-foreground bg-background">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-card-muted mb-3 border border-border">
+          <MessageSquare className="h-7 w-7 opacity-50 text-foreground" />
         </div>
-        <h3 className="text-base font-semibold text-zinc-800 dark:text-zinc-200 mb-1">
+        <h3 className="text-base font-bold text-foreground mb-1">
           No Conversation Selected
         </h3>
-        <p className="text-xs text-zinc-500 max-w-xs mb-3">
+        <p className="text-xs text-muted-foreground max-w-xs mb-3">
           Select an existing conversation from the sidebar or start a new one to chat with the knowledge base.
         </p>
       </div>
@@ -77,9 +77,9 @@ export function ChatArea() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <div className="flex flex-col items-center gap-2 text-zinc-400">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+      <div className="flex flex-1 items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
           <span className="text-xs">Loading message history...</span>
         </div>
       </div>
@@ -88,9 +88,9 @@ export function ChatArea() {
 
   if (isError) {
     return (
-      <div className="flex flex-1 items-center justify-center p-6 text-center">
-        <div className="max-w-md rounded-2xl border border-rose-200 bg-rose-50 dark:border-rose-900/50 dark:bg-rose-950/30 p-6 text-rose-700 dark:text-rose-400">
-          <h4 className="font-semibold text-sm mb-1">Failed to load conversation</h4>
+      <div className="flex flex-1 items-center justify-center p-6 text-center bg-background">
+        <div className="max-w-md rounded-2xl border border-destructive-border bg-destructive-subtle p-6 text-destructive-subtle-foreground">
+          <h4 className="font-bold text-sm mb-1">Failed to load conversation</h4>
           <p className="text-xs">{(error as Error)?.message || "Unknown error occurred"}</p>
         </div>
       </div>
@@ -100,14 +100,14 @@ export function ChatArea() {
   const messages = conversation?.messages || [];
 
   return (
-    <div className="flex flex-1 flex-col h-full overflow-hidden bg-white dark:bg-zinc-900">
+    <div className="flex flex-1 flex-col h-full overflow-hidden bg-background">
       {/* Thread Header */}
-      <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-4 sm:px-6 py-3 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xs">
+      <div className="flex items-center justify-between border-b border-border px-4 sm:px-6 py-3 bg-card/80 backdrop-blur-xs">
         <div>
-          <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 truncate max-w-md">
+          <h2 className="text-sm font-bold text-foreground truncate max-w-md">
             {conversation?.title || "Conversation"}
           </h2>
-          <span className="text-[11px] text-zinc-400">
+          <span className="text-[11px] text-muted-foreground">
             {messages.length} message{messages.length === 1 ? "" : "s"}
           </span>
         </div>
@@ -116,12 +116,12 @@ export function ChatArea() {
       {/* Messages Stream */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-2">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-zinc-400 py-12">
-            <Sparkles className="h-8 w-8 text-blue-500 mb-2" />
-            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-12">
+            <Sparkles className="h-8 w-8 text-primary mb-2" />
+            <p className="text-sm font-semibold text-foreground">
               Start this conversation
             </p>
-            <p className="text-xs text-zinc-400 max-w-xs mt-1">
+            <p className="text-xs text-muted-foreground max-w-xs mt-1">
               Ask questions about ingested documents, policies, reports, or data.
             </p>
           </div>
@@ -132,11 +132,11 @@ export function ChatArea() {
         {/* Assistant Thinking / Inferencing Indicator */}
         {isSending && (
           <div className="flex items-start gap-3 py-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm mt-0.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-2xs mt-0.5">
               <Bot className="h-4 w-4" />
             </div>
-            <div className="flex items-center gap-2 rounded-2xl rounded-tl-xs border border-zinc-200 dark:border-zinc-700/60 bg-white dark:bg-zinc-800/90 px-4 py-3 text-xs text-zinc-500 shadow-xs">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />
+            <div className="flex items-center gap-2 rounded-2xl rounded-tl-xs border border-border bg-card px-4 py-3 text-xs text-muted-foreground shadow-2xs">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
               <span>Retrieving chunks & synthesizing answer...</span>
             </div>
           </div>
@@ -151,9 +151,13 @@ export function ChatArea() {
           await sendMessage(req);
         }}
         isSending={isSending}
-        disabled={isLoading}
+        disabled={isLoading || isAgentPending}
+        placeholder={
+          isAgentPending
+            ? "Your Support Agent account is awaiting Admin approval. Messaging is disabled."
+            : undefined
+        }
       />
     </div>
   );
 }
-

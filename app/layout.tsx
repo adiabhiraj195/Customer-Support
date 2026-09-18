@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/QueryProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 
 export const metadata: Metadata = {
   title: "RAG Pipeline & Customer Support AI",
-  description: "Minimal, modular frontend for persistent conversational AI and RAG knowledge base",
+  description:
+    "Modular frontend for persistent conversational AI and RAG knowledge base with centralized design system",
 };
 
 export default function RootLayout({
@@ -14,11 +16,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('rag_app_theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (theme === 'dark' || ((!theme || theme === 'system') && prefersDark)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans selection:bg-primary/20 selection:text-primary">
         <QueryProvider>
-          <Header />
-          <main className="flex-1 flex flex-col">{children}</main>
+          <ThemeProvider>
+            <Header />
+            <main className="flex-1 flex flex-col">{children}</main>
+          </ThemeProvider>
         </QueryProvider>
       </body>
     </html>

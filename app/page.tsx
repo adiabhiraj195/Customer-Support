@@ -17,16 +17,16 @@ function DashboardContent() {
   const currentTab = initialTab || activeTab;
 
   return (
-    <div className="flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-background">
       {/* Sub-header Navigation Tabs */}
-      <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 sm:px-6 py-2.5">
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-xs font-medium">
+      <div className="flex items-center justify-between border-b border-border bg-card px-4 sm:px-6 py-2.5">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-card-muted border border-border/50 text-xs font-medium">
           <button
             onClick={() => setActiveTab("chat")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
               currentTab === "chat"
-                ? "bg-white text-zinc-900 shadow-xs dark:bg-zinc-800 dark:text-zinc-50"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                ? "bg-card text-foreground font-semibold shadow-2xs"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <MessageSquare className="h-3.5 w-3.5" />
@@ -35,10 +35,10 @@ function DashboardContent() {
 
           <button
             onClick={() => setActiveTab("knowledge")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
               currentTab === "knowledge"
-                ? "bg-white text-zinc-900 shadow-xs dark:bg-zinc-800 dark:text-zinc-50"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                ? "bg-card text-foreground font-semibold shadow-2xs"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Database className="h-3.5 w-3.5" />
@@ -47,10 +47,10 @@ function DashboardContent() {
 
           <button
             onClick={() => setActiveTab("stateless")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
               currentTab === "stateless"
-                ? "bg-white text-zinc-900 shadow-xs dark:bg-zinc-800 dark:text-zinc-50"
-                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                ? "bg-card text-foreground font-semibold shadow-2xs"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Sparkles className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ function DashboardContent() {
           </button>
         </div>
 
-        <div className="hidden sm:block text-xs text-zinc-400">
+        <div className="hidden sm:block text-xs text-muted-foreground">
           {currentTab === "chat" && "Persistent Multi-turn AI Assistant"}
           {currentTab === "knowledge" && "Direct S3 Ingestion & BullMQ Tracker"}
           {currentTab === "stateless" && "Direct RRF & Hybrid Search Diagnostics"}
@@ -94,7 +94,7 @@ export default function Home() {
   return (
     <Suspense
       fallback={
-        <div className="flex flex-1 items-center justify-center p-8 text-zinc-400 text-xs">
+        <div className="flex flex-1 items-center justify-center p-8 text-muted-foreground text-xs">
           Loading dashboard...
         </div>
       }
