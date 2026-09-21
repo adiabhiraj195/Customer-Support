@@ -48,11 +48,11 @@ export function ChatInput({
   };
 
   return (
-    <div className="w-full border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 p-3 sm:p-4 backdrop-blur-md">
+    <div className="w-full border-t border-border bg-card/95 p-3 sm:p-4 backdrop-blur-md">
       {showSettings && (
-        <div className="mb-3 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex flex-wrap items-center gap-4 text-xs">
+        <div className="mb-3 p-3 rounded-xl border border-border bg-muted/50 flex flex-wrap items-center gap-4 text-xs">
           <div className="flex items-center gap-2">
-            <label className="font-medium text-zinc-600 dark:text-zinc-400">
+            <label className="font-medium text-muted-foreground">
               Top-K Chunks:
             </label>
             <input
@@ -61,12 +61,12 @@ export function ChatInput({
               max={20}
               value={topK}
               onChange={(e) => setTopK(Number(e.target.value))}
-              className="w-16 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-16 rounded-md border border-input bg-background px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="font-medium text-zinc-600 dark:text-zinc-400">
+            <label className="font-medium text-muted-foreground">
               RRF Constant K:
             </label>
             <input
@@ -75,11 +75,11 @@ export function ChatInput({
               max={100}
               value={rrfK}
               onChange={(e) => setRrfK(Number(e.target.value))}
-              className="w-16 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-16 rounded-md border border-input bg-background px-2 py-1 text-center font-mono focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             />
           </div>
 
-          <span className="text-[11px] text-zinc-400">
+          <span className="text-[11px] text-subtle-foreground">
             Controls reciprocal rank fusion and max context size for retrieval.
           </span>
         </div>
@@ -91,8 +91,8 @@ export function ChatInput({
           onClick={() => setShowSettings(!showSettings)}
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors ${
             showSettings
-              ? "border-blue-500 bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
-              : "border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              ? "border-primary bg-primary-subtle text-primary"
+              : "border-border text-muted-foreground hover:bg-muted"
           }`}
           title="Retrieval Hyperparameters"
         >
@@ -107,14 +107,14 @@ export function ChatInput({
             disabled={disabled || isSending}
             rows={1}
             placeholder={placeholder}
-            className="w-full resize-none rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 px-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:border-blue-500 focus:bg-white dark:focus:bg-zinc-900 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition max-h-32"
+            className="w-full resize-none rounded-xl border border-input bg-muted/40 px-4 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 focus:outline-none transition max-h-32"
           />
         </div>
 
         <button
           type="submit"
           disabled={!input.trim() || disabled || isSending}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm hover:bg-blue-700 disabled:opacity-40 disabled:hover:bg-blue-600 transition"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs hover:bg-primary-hover disabled:opacity-40 disabled:hover:bg-primary transition"
         >
           {isSending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -126,4 +126,3 @@ export function ChatInput({
     </div>
   );
 }
-

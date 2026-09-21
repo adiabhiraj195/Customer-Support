@@ -45,17 +45,17 @@ export default function SignupPage() {
   if (isAuthenticated) {
     return (
       <div className="flex flex-1 items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-8 text-center shadow-sm">
-          <Bot className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+        <div className="max-w-md w-full bg-card rounded-2xl border border-border p-8 text-center shadow-xs">
+          <Bot className="h-12 w-12 text-primary mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-foreground mb-2">
             You already have an active session
           </h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+          <p className="text-sm text-muted-foreground mb-6">
             Head to conversations to start chatting with your RAG pipeline.
           </p>
           <Link
             href="/conversation"
-            className="inline-block w-full rounded-xl bg-blue-600 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition"
+            className="inline-block w-full rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover transition"
           >
             Go to Conversations
           </Link>
@@ -66,23 +66,23 @@ export default function SignupPage() {
 
   return (
     <div className="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-md space-y-8 bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <div className="w-full max-w-md space-y-8 bg-card p-8 rounded-2xl border border-border shadow-xs">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md mb-4">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-xs mb-4">
             <Bot className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Create an Account
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Get started with your custom conversational knowledge assistant
           </p>
         </div>
 
         {/* Error Alert */}
         {(localError || registerError) && (
-          <div className="flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 p-3 text-sm text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50">
+          <div className="flex items-center gap-2 rounded-xl bg-destructive-subtle p-3 text-sm text-destructive-subtle-foreground border border-destructive-border">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{localError || (registerError as Error)?.message}</span>
           </div>
@@ -93,19 +93,19 @@ export default function SignupPage() {
           <div>
             <label
               htmlFor="name"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+              className="block text-xs font-medium text-foreground mb-1"
             >
               Full Name (Optional)
             </label>
             <div className="relative">
-              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-subtle-foreground" />
               <input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Jane Doe"
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 pl-10 pr-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition"
+                className="w-full rounded-xl border border-input bg-muted/40 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 focus:outline-none transition"
               />
             </div>
           </div>
@@ -113,12 +113,12 @@ export default function SignupPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+              className="block text-xs font-medium text-foreground mb-1"
             >
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-subtle-foreground" />
               <input
                 id="email"
                 type="email"
@@ -126,7 +126,7 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="user@example.com"
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 pl-10 pr-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition"
+                className="w-full rounded-xl border border-input bg-muted/40 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 focus:outline-none transition"
               />
             </div>
           </div>
@@ -134,12 +134,12 @@ export default function SignupPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+              className="block text-xs font-medium text-foreground mb-1"
             >
               Password (min. 6 characters)
             </label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-subtle-foreground" />
               <input
                 id="password"
                 type="password"
@@ -148,7 +148,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 pl-10 pr-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition"
+                className="w-full rounded-xl border border-input bg-muted/40 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 focus:outline-none transition"
               />
             </div>
           </div>
@@ -156,17 +156,17 @@ export default function SignupPage() {
           <div>
             <label
               htmlFor="role"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+              className="block text-xs font-medium text-foreground mb-1"
             >
               Role
             </label>
             <div className="relative">
-              <Shield className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <Shield className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-subtle-foreground" />
               <select
                 id="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 pl-10 pr-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition"
+                className="w-full rounded-xl border border-input bg-muted/40 pl-10 pr-4 py-2.5 text-sm text-foreground focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 focus:outline-none transition"
               >
                 <option value="user">User (Standard Access)</option>
                 <option value="agent">Support Agent</option>
@@ -178,7 +178,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isRegistering}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 text-sm shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-2.5 text-sm shadow-xs transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isRegistering ? (
               <>
@@ -192,11 +192,11 @@ export default function SignupPage() {
         </form>
 
         {/* Footer */}
-        <div className="text-center text-xs text-zinc-500">
+        <div className="text-center text-xs text-muted-foreground">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
+            className="font-medium text-primary hover:text-primary-hover"
           >
             Sign in instead
           </Link>
@@ -205,4 +205,3 @@ export default function SignupPage() {
     </div>
   );
 }
-

@@ -48,22 +48,22 @@ export function StatelessPlayground() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Playground Card */}
-      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xs space-y-6">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-subtle text-primary text-xs font-semibold mb-2">
             <Sparkles className="h-3.5 w-3.5" />
             <span>Stateless RAG Retrieval & Inference</span>
           </div>
-          <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
+          <h3 className="text-lg font-bold text-foreground tracking-tight">
             Playground & Pipeline Diagnostics
           </h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Test vector retrieval, BM25 keyword search, reciprocal rank fusion, Cohere reranking, and Groq generation directly without persisting to PostgreSQL.
           </p>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 p-3 text-xs text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50">
+          <div className="flex items-center gap-2 rounded-xl bg-destructive-subtle p-3 text-xs text-destructive-subtle-foreground border border-destructive-border">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{(error as Error)?.message}</span>
           </div>
@@ -71,7 +71,7 @@ export function StatelessPlayground() {
 
         <form onSubmit={handleQuery} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+            <label className="block text-xs font-medium text-foreground mb-1">
               Test Prompt / Query
             </label>
             <textarea
@@ -79,14 +79,14 @@ export function StatelessPlayground() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="e.g. What were the total operational expenses in Q2?"
-              className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 px-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-input bg-muted/40 px-4 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:border-primary focus:bg-background focus:outline-none"
             />
           </div>
 
           {/* Hyperparameters */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-xs font-medium text-foreground mb-1">
                 Top-K Chunks
               </label>
               <input
@@ -95,12 +95,12 @@ export function StatelessPlayground() {
                 max={20}
                 value={topK}
                 onChange={(e) => setTopK(Number(e.target.value))}
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 px-3 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-input bg-muted/40 px-3 py-1.5 text-xs text-foreground focus:border-primary focus:bg-background focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-xs font-medium text-foreground mb-1">
                 RRF Smoothing (k)
               </label>
               <input
@@ -109,17 +109,17 @@ export function StatelessPlayground() {
                 max={100}
                 value={rrfK}
                 onChange={(e) => setRrfK(Number(e.target.value))}
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 px-3 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-input bg-muted/40 px-3 py-1.5 text-xs text-foreground focus:border-primary focus:bg-background focus:outline-none"
               />
             </div>
 
             <div className="flex items-center pt-5">
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-600 dark:text-zinc-400">
+              <label className="flex items-center gap-2 cursor-pointer text-xs text-muted-foreground">
                 <input
                   type="checkbox"
                   checked={filterUserOnly}
                   onChange={(e) => setFilterUserOnly(e.target.checked)}
-                  className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-input text-primary focus:ring-primary"
                 />
                 <span>Scope to current user docs</span>
               </label>
@@ -129,7 +129,7 @@ export function StatelessPlayground() {
           <button
             type="submit"
             disabled={!query.trim() || isLoading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 text-xs shadow-sm transition disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-2.5 text-xs shadow-xs transition disabled:opacity-50"
           >
             {isLoading ? (
               <>
@@ -148,13 +148,13 @@ export function StatelessPlayground() {
 
       {/* Response Display */}
       {responseData && (
-        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
-            <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
+        <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-border pb-3">
+            <h4 className="text-sm font-bold text-foreground">
               Pipeline Output
             </h4>
             {responseData.pipelineStats?.durationMs && (
-              <span className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 font-medium">
+              <span className="flex items-center gap-1 text-xs text-primary font-medium">
                 <Clock className="h-3.5 w-3.5" />
                 {responseData.pipelineStats.durationMs}ms
               </span>
@@ -164,8 +164,8 @@ export function StatelessPlayground() {
           {/* Rewritten query banner if any */}
           {responseData.rewrittenQuery &&
             responseData.rewrittenQuery !== responseData.originalQuery && (
-              <div className="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-800/50 p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800">
-                <CornerDownRight className="h-3.5 w-3.5 text-blue-500" />
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 p-2.5 rounded-xl border border-border">
+                <CornerDownRight className="h-3.5 w-3.5 text-primary" />
                 <span className="font-semibold">Rewritten Query:</span>
                 <span>&quot;{responseData.rewrittenQuery}&quot;</span>
               </div>
@@ -173,8 +173,8 @@ export function StatelessPlayground() {
 
           {/* Clarification Alert if model asked for clarify */}
           {isClarification && (
-            <div className="flex items-center gap-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 p-3 text-xs text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
-              <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
+            <div className="flex items-center gap-2 rounded-xl bg-warning-subtle p-3 text-xs text-warning-subtle-foreground border border-warning-border">
+              <AlertCircle className="h-4 w-4 text-warning shrink-0" />
               <span>
                 <strong>Clarification Required:</strong>{" "}
                 {responseData.clarification || responseData.answer}
@@ -184,8 +184,8 @@ export function StatelessPlayground() {
 
           {/* Synthesized Answer */}
           {responseData.answer && !isClarification && (
-            <div className="p-4 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40">
-              <span className="block text-[11px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-2">
+            <div className="p-4 rounded-xl bg-primary-subtle/50 border border-primary-border">
+              <span className="block text-[11px] font-bold text-primary uppercase tracking-wider mb-2">
                 Synthesized Answer
               </span>
               <MarkdownRenderer content={responseData.answer} />
@@ -208,12 +208,12 @@ export function StatelessPlayground() {
               <button
                 type="button"
                 onClick={() => setShowRawContext(!showRawContext)}
-                className="text-xs font-semibold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground"
               >
                 {showRawContext ? "Hide Raw Context" : "View Injected Raw Context"}
               </button>
               {showRawContext && (
-                <pre className="mt-2 p-3 rounded-xl bg-zinc-900 text-zinc-100 text-[11px] font-mono whitespace-pre-wrap overflow-x-auto max-h-60">
+                <pre className="mt-2 p-3 rounded-xl bg-card border border-border text-foreground text-[11px] font-mono whitespace-pre-wrap overflow-x-auto max-h-60">
                   {responseData.context}
                 </pre>
               )}
@@ -224,4 +224,3 @@ export function StatelessPlayground() {
     </div>
   );
 }
-

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider, themeConfig, colorPresets } from "@/lib/theme";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { Header } from "@/components/layout/Header";
 
@@ -13,13 +14,66 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const activePreset = colorPresets[themeConfig.activePreset] || colorPresets.blue;
+  const isCustomPreset = themeConfig.activePreset !== "blue";
+
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
-        <QueryProvider>
-          <Header />
-          <main className="flex-1 flex flex-col">{children}</main>
-        </QueryProvider>
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('rag-support-theme') || 'system';
+                  var isDark = stored === 'dark' || (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  var root = document.documentElement;
+                  if (isDark) {
+                    root.classList.add('dark');
+                    root.classList.remove('light');
+                    root.setAttribute('data-theme', 'dark');
+                  } else {
+                    root.classList.add('light');
+                    root.classList.remove('dark');
+                    root.setAttribute('data-theme', 'light');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+        {isCustomPreset && (
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                :root, .light, [data-theme="light"] {
+                  --primary: ${activePreset.light.primary};
+                  --primary-hover: ${activePreset.light.primaryHover};
+                  --primary-foreground: ${activePreset.light.primaryForeground};
+                  --primary-subtle: ${activePreset.light.primarySubtle};
+                  --primary-subtle-foreground: ${activePreset.light.primarySubtleForeground};
+                  --primary-border: ${activePreset.light.primaryBorder};
+                }
+                .dark, [data-theme="dark"] {
+                  --primary: ${activePreset.dark.primary};
+                  --primary-hover: ${activePreset.dark.primaryHover};
+                  --primary-foreground: ${activePreset.dark.primaryForeground};
+                  --primary-subtle: ${activePreset.dark.primarySubtle};
+                  --primary-subtle-foreground: ${activePreset.dark.primarySubtleForeground};
+                  --primary-border: ${activePreset.dark.primaryBorder};
+                }
+              `,
+            }}
+          />
+        )}
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans transition-colors duration-150">
+        <ThemeProvider>
+          <QueryProvider>
+            <Header />
+            <main className="flex-1 flex flex-col">{children}</main>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

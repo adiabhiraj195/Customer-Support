@@ -32,19 +32,19 @@ function CodeBlock({
   };
 
   return (
-    <div className="my-3 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 text-zinc-100 text-xs shadow-xs">
-      <div className="flex items-center justify-between px-3.5 py-1.5 bg-zinc-900/90 border-b border-zinc-800 text-[11px] text-zinc-400 font-mono">
+    <div className="my-3 rounded-xl overflow-hidden border border-border bg-card text-foreground text-xs shadow-xs">
+      <div className="flex items-center justify-between px-3.5 py-1.5 bg-muted/80 border-b border-border text-[11px] text-muted-foreground font-mono">
         <span>{language || "code"}</span>
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1 hover:text-zinc-200 transition-colors py-0.5 px-1.5 rounded hover:bg-zinc-800"
+          className="flex items-center gap-1 hover:text-foreground transition-colors py-0.5 px-1.5 rounded hover:bg-muted"
           title="Copy code"
         >
           {copied ? (
             <>
-              <Check className="h-3.5 w-3.5 text-emerald-400" />
-              <span className="text-[10px] text-emerald-400">Copied</span>
+              <Check className="h-3.5 w-3.5 text-success" />
+              <span className="text-[10px] text-success">Copied</span>
             </>
           ) : (
             <>
@@ -54,7 +54,7 @@ function CodeBlock({
           )}
         </button>
       </div>
-      <pre className="p-3.5 overflow-x-auto font-mono text-[12px] leading-relaxed text-zinc-200">
+      <pre className="p-3.5 overflow-x-auto font-mono text-[12px] leading-relaxed text-foreground">
         <code className={className} {...props}>
           {children}
         </code>
@@ -77,15 +77,15 @@ export function MarkdownRenderer({
             <p className="mb-2.5 last:mb-0 leading-relaxed">{children}</p>
           ),
           h1: ({ children }) => (
-            <h1 className="text-base font-bold mt-3 mb-2 pb-1 border-b border-zinc-200 dark:border-zinc-700/60">
+            <h1 className="text-base font-bold mt-3 mb-2 pb-1 border-b border-border text-foreground">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-sm font-bold mt-2.5 mb-1.5">{children}</h2>
+            <h2 className="text-sm font-bold mt-2.5 mb-1.5 text-foreground">{children}</h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-xs font-bold mt-2 mb-1">{children}</h3>
+            <h3 className="text-xs font-bold mt-2 mb-1 text-foreground">{children}</h3>
           ),
           ul: ({ children }) => (
             <ul className="list-disc list-outside ml-4 mb-2.5 space-y-1">
@@ -104,8 +104,8 @@ export function MarkdownRenderer({
             <blockquote
               className={
                 isUser
-                  ? "border-l-2 border-white/60 pl-3 my-2 italic text-blue-100"
-                  : "border-l-2 border-blue-500 pl-3 my-2 italic text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-800/40 py-1 rounded-r-lg"
+                  ? "border-l-2 border-primary-foreground/60 pl-3 my-2 italic text-primary-foreground/90"
+                  : "border-l-2 border-primary pl-3 my-2 italic text-muted-foreground bg-muted/40 py-1 rounded-r-lg"
               }
             >
               {children}
@@ -122,27 +122,27 @@ export function MarkdownRenderer({
               rel="noopener noreferrer"
               className={
                 isUser
-                  ? "underline font-medium text-blue-100 hover:text-white"
-                  : "underline font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                  ? "underline font-medium text-primary-foreground/90 hover:text-primary-foreground"
+                  : "underline font-medium text-primary hover:text-primary-hover"
               }
             >
               {children}
             </a>
           ),
           table: ({ children }) => (
-            <div className="my-3 overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700">
-              <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-700 text-xs text-left">
+            <div className="my-3 overflow-x-auto rounded-xl border border-border">
+              <table className="min-w-full divide-y divide-border text-xs text-left">
                 {children}
               </table>
             </div>
           ),
           thead: ({ children }) => (
-            <thead className="bg-zinc-100 dark:bg-zinc-800/80 font-semibold text-zinc-900 dark:text-zinc-100">
+            <thead className="bg-muted/80 font-semibold text-foreground">
               {children}
             </thead>
           ),
           tbody: ({ children }) => (
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700/50">
+            <tbody className="divide-y divide-border/60">
               {children}
             </tbody>
           ),
@@ -151,7 +151,7 @@ export function MarkdownRenderer({
           ),
           td: ({ children }) => <td className="px-3 py-2">{children}</td>,
           tr: ({ children }) => (
-            <tr className="even:bg-zinc-50/50 dark:even:bg-zinc-800/30">
+            <tr className="even:bg-muted/30">
               {children}
             </tr>
           ),
@@ -159,8 +159,8 @@ export function MarkdownRenderer({
             <hr
               className={
                 isUser
-                  ? "my-3 border-white/20"
-                  : "my-3 border-zinc-200 dark:border-zinc-700"
+                  ? "my-3 border-primary-foreground/20"
+                  : "my-3 border-border"
               }
             />
           ),
@@ -183,8 +183,8 @@ export function MarkdownRenderer({
               <code
                 className={
                   isUser
-                    ? "bg-blue-700/70 text-blue-50 font-mono text-[12px] px-1.5 py-0.5 rounded"
-                    : "bg-zinc-100 dark:bg-zinc-800 text-rose-600 dark:text-rose-400 font-mono text-[12px] px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-700/60"
+                    ? "bg-primary-hover text-primary-foreground font-mono text-[12px] px-1.5 py-0.5 rounded"
+                    : "bg-muted text-destructive font-mono text-[12px] px-1.5 py-0.5 rounded border border-border"
                 }
                 {...props}
               >
@@ -199,4 +199,3 @@ export function MarkdownRenderer({
     </div>
   );
 }
-
