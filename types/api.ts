@@ -247,3 +247,96 @@ export interface ApiErrorResponse {
   statusCode?: number;
 }
 
+export type DocumentStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+
+export interface DocumentItem {
+  id: string;
+  userId: string | null;
+  filename: string;
+  mimeType: string;
+  s3Key: string;
+  status: DocumentStatus;
+  version: number;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    id: string;
+    email: string;
+    name: string | null;
+    role: string;
+  } | null;
+}
+
+export interface DocumentPagination {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface DocumentListResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    documents: DocumentItem[];
+    pagination: DocumentPagination;
+  };
+}
+
+export interface DocumentDetailResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    document: DocumentItem;
+  };
+}
+
+export interface DocumentContentResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    id: string;
+    filename: string;
+    mimeType: string;
+    status: DocumentStatus | string;
+    version: number;
+    s3Key: string;
+    content: string;
+    charCount: number;
+  };
+}
+
+export interface DocumentViewUrlResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    id: string;
+    filename: string;
+    s3Key: string;
+    downloadUrl: string;
+    expiresIn: number;
+  };
+}
+
+export interface DeleteDocumentResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    id: string;
+    filename: string;
+  };
+}
+
+export interface DocumentFilterParams {
+  page?: number;
+  limit?: number;
+  status?: DocumentStatus | "";
+  userId?: string;
+  search?: string;
+  all?: boolean;
+  sortBy?: "createdAt" | "updatedAt" | "filename" | "status" | "version";
+  order?: "asc" | "desc";
+}
+

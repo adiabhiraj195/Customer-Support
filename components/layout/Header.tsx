@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bot, Database, LogIn, LogOut, MessageSquare, Sparkles } from "lucide-react";
+import { Bot, Database, FileText, LogIn, LogOut, MessageSquare, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useHealth } from "@/hooks/useHealth";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
@@ -55,6 +55,18 @@ export function Header() {
             >
               <Database className="h-4 w-4" />
               <span>Knowledge Base</span>
+            </Link>
+
+            <Link
+              href="/documents"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors ${
+                pathname.startsWith("/documents")
+                  ? "bg-muted text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+              }`}
+            >
+              <FileText className="h-4 w-4" />
+              <span>Documents</span>
             </Link>
 
             <Link
