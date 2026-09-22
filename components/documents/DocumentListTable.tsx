@@ -47,7 +47,7 @@ export function DocumentListTable({
   const getFileIcon = (filename: string, mimeType?: string) => {
     const ext = filename.split(".").pop()?.toLowerCase();
     if (ext === "csv" || ext === "xlsx" || mimeType?.includes("csv")) {
-      return <FileSpreadsheet className="h-4 w-4 text-emerald-500 shrink-0" />;
+      return <FileSpreadsheet className="h-4 w-4 text-primary shrink-0" />;
     }
     if (
       ext === "json" ||
@@ -55,9 +55,9 @@ export function DocumentListTable({
       mimeType?.includes("json") ||
       mimeType?.includes("markdown")
     ) {
-      return <FileCode className="h-4 w-4 text-blue-500 shrink-0" />;
+      return <FileCode className="h-4 w-4 text-primary shrink-0" />;
     }
-    return <FileText className="h-4 w-4 text-primary shrink-0" />;
+    return <FileText className="h-4 w-4 text-muted-foreground shrink-0" />;
   };
 
   const renderStatusBadge = (status: DocumentStatus | string) => {

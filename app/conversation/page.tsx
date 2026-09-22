@@ -9,7 +9,7 @@ export default function ConversationPage() {
   const { isAuthenticated, isHydrated } = useAuth();
 
   if (!isHydrated) {
-    return <AuthLoading />;
+    return <AuthLoading className="h-full" />;
   }
 
   if (!isAuthenticated) {
@@ -17,12 +17,13 @@ export default function ConversationPage() {
       <AuthRequiredCard
         title="Authentication Required"
         description="You must be signed in to access and manage your persistent conversations."
+        className="h-full"
       />
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="flex-1 flex flex-col md:flex-row h-full min-h-0 overflow-hidden">
       <ConversationSidebar />
       <ChatArea />
     </div>

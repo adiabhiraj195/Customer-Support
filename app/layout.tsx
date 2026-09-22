@@ -67,11 +67,11 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans transition-colors duration-150">
+      <body className="h-full flex flex-col bg-background text-foreground font-sans transition-colors duration-150 overflow-hidden">
         <ThemeProvider>
           <QueryProvider>
             <Header />
-            <main className="flex-1 flex flex-col">{children}</main>
+            <main className="flex-1 min-h-0 flex flex-col overflow-hidden">{children}</main>
           </QueryProvider>
         </ThemeProvider>
       </body>

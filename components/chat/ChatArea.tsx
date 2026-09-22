@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Bot, Loader2, MessageSquare, Sparkles } from "lucide-react";
+import { Bot, ChevronLeft, Loader2, MessageSquare, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useConversation } from "@/hooks/useConversations";
 import { useUIStore } from "@/stores/uiStore";
@@ -12,7 +12,7 @@ import { AuthRequiredCard } from "@/components/auth/AuthRequiredCard";
 
 export function ChatArea() {
   const { isAuthenticated } = useAuth();
-  const { selectedConversationId } = useUIStore();
+  const { selectedConversationId, setSelectedConversationId } = useUIStore();
   const {
     conversation,
     isLoading,
@@ -41,7 +41,7 @@ export function ChatArea() {
 
   if (!selectedConversationId) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center text-muted-foreground">
+      <div className="hidden md:flex flex-1 flex-col items-center justify-center p-6 text-center text-muted-foreground h-full min-h-0 bg-background/50">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted mb-3">
           <MessageSquare className="h-7 w-7 text-muted-foreground" />
         </div>
@@ -57,7 +57,7 @@ export function ChatArea() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 items-center justify-center h-full min-h-0">
         <div className="flex flex-col items-center gap-2 text-muted-foreground">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
           <span className="text-xs">Loading message history...</span>
@@ -68,7 +68,7 @@ export function ChatArea() {
 
   if (isError) {
     return (
-      <div className="flex flex-1 items-center justify-center p-6 text-center">
+      <div className="flex flex-1 items-center justify-center p-6 text-center h-full min-h-0">
         <div className="max-w-md rounded-2xl border border-destructive-border bg-destructive-subtle p-6 text-destructive-subtle-foreground">
           <h4 className="font-semibold text-sm mb-1">Failed to load conversation</h4>
           <p className="text-xs">{(error as Error)?.message || "Unknown error occurred"}</p>
@@ -80,21 +80,31 @@ export function ChatArea() {
   const messages = conversation?.messages || [];
 
   return (
-    <div className="flex flex-1 flex-col h-full overflow-hidden bg-card">
+    <div className="flex flex-1 flex-col h-full min-h-0 overflow-hidden bg-card">
       {/* Thread Header */}
-      <div className="flex items-center justify-between border-b border-border px-4 sm:px-6 py-3 bg-card/70 backdrop-blur-xs">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground truncate max-w-md">
-            {conversation?.title || "Conversation"}
-          </h2>
-          <span className="text-[11px] text-muted-foreground">
-            {messages.length} message{messages.length === 1 ? "" : "s"}
-          </span>
+      <div className="shrink-0 flex items-center justify-between border-b border-border px-4 sm:px-6 py-3 bg-card/70 backdrop-blur-xs">
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            type="button"
+            onClick={() => setSelectedConversationId(null)}
+            className="md:hidden flex items-center justify-center h-8 w-8 -ml-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted shrink-0 transition"
+            title="Back to conversations"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold text-foreground truncate max-w-md">
+              {conversation?.title || "Conversation"}
+            </h2>
+            <span className="text-[11px] text-muted-foreground">
+              {messages.length} message{messages.length === 1 ? "" : "s"}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Messages Stream */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-2">
+      {/* Messages Stream - ONLY THIS CONTAINER SCROLLS */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 space-y-3">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-12">
             <Sparkles className="h-8 w-8 text-primary mb-2" />
@@ -125,7 +135,7 @@ export function ChatArea() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Chat Input Bar */}
+      {/* Chat Input Bar - FIRMLY FIXED AT BOTTOM */}
       <ChatInput
         onSendMessage={async (req: SendMessageRequest) => {
           await sendMessage(req);

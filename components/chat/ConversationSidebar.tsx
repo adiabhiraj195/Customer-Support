@@ -45,9 +45,13 @@ export function ConversationSidebar() {
   };
 
   return (
-    <aside className="flex flex-col w-full md:w-72 lg:w-80 h-full border-r border-border bg-card/50">
+    <aside
+      className={`${
+        selectedConversationId ? "hidden md:flex" : "flex"
+      } flex-col w-full md:w-72 lg:w-80 h-full min-h-0 shrink-0 border-r border-border bg-card/50`}
+    >
       {/* Top action bar */}
-      <div className="p-3 border-b border-border">
+      <div className="shrink-0 p-3 border-b border-border">
         {isAdding ? (
           <form onSubmit={handleCreate} className="flex items-center gap-1.5">
             <input
@@ -85,7 +89,7 @@ export function ConversationSidebar() {
       </div>
 
       {/* Conversations List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1">
+      <div className="flex-1 min-h-0 overflow-y-auto p-2 space-y-1">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center p-8 text-subtle-foreground">
             <Loader2 className="h-5 w-5 animate-spin mb-2 text-primary" />

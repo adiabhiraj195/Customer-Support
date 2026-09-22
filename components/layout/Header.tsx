@@ -13,7 +13,7 @@ export function Header() {
   const { isHealthy, isLoading: isHealthLoading } = useHealth();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-md">
+    <header className="shrink-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
         <div className="flex items-center gap-6">

@@ -24,7 +24,7 @@ export function AuthRequiredCard({
   signupHref = "/signup",
   signInText = "Sign In",
   signUpText = "Create Account",
-  className = "min-h-[calc(100vh-4rem)]",
+  className = "h-full min-h-0",
   cardClassName = "",
 }: AuthRequiredCardProps) {
   return (
@@ -60,7 +60,7 @@ export function AuthRequiredCard({
 
 export function AuthLoading({
   message = "Checking authorization...",
-  className = "min-h-[calc(100vh-4rem)]",
+  className = "h-full min-h-0",
 }: {
   message?: string;
   className?: string;

@@ -48,7 +48,7 @@ export function ChatInput({
   };
 
   return (
-    <div className="w-full border-t border-border bg-card/95 p-3 sm:p-4 backdrop-blur-md">
+    <div className="shrink-0 w-full border-t border-border bg-card/95 p-3 sm:p-4 backdrop-blur-md">
       {showSettings && (
         <div className="mb-3 p-3 rounded-xl border border-border bg-muted/50 flex flex-wrap items-center gap-4 text-xs">
           <div className="flex items-center gap-2">

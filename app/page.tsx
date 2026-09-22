@@ -20,7 +20,7 @@ export default function HomePage() {
   }, [isAuthenticated, isHydrated, router]);
 
   return (
-    <div className="flex flex-1 items-center justify-center min-h-[calc(100vh-4rem)] bg-background text-muted-foreground">
+    <div className="flex flex-1 items-center justify-center h-full min-h-0 bg-background text-muted-foreground">
       <div className="flex flex-col items-center gap-2.5">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
         <span className="text-xs font-medium">Redirecting...</span>
