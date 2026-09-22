@@ -103,7 +103,7 @@ export function Header() {
                 <span className="hidden sm:inline">Offline</span>
               </span>
             )}
-            <span className="text-[11px] text-subtle-foreground">localhost:8000</span>
+            <span className="text-[11px] text-subtle-foreground">Server</span>
           </div>
 
           {/* Theme Toggle Component */}
