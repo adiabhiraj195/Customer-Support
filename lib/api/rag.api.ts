@@ -1,5 +1,6 @@
 import { apiFetch } from "./client";
 import {
+  ChunkingStrategiesResponse,
   IngestRequest,
   IngestResponse,
   JobStatusResponse,
@@ -8,6 +9,12 @@ import {
   UploadUrlRequest,
   UploadUrlResponse,
 } from "@/types/api";
+
+export async function getChunkingStrategies(): Promise<ChunkingStrategiesResponse> {
+  return apiFetch<ChunkingStrategiesResponse>("/rag/chunking-strategies", {
+    method: "GET",
+  });
+}
 
 export async function getUploadUrl(
   body: UploadUrlRequest

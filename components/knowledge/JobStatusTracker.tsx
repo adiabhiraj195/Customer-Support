@@ -103,7 +103,7 @@ export function JobStatusTracker({ jobId }: { jobId: string }) {
             <FileCheck className="h-4 w-4 text-success" />
             <span>Successfully indexed into Redis Vector Store</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-muted-foreground">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px] text-muted-foreground">
             <div>
               Total Chunks:{" "}
               <span className="font-semibold text-foreground">
@@ -116,6 +116,14 @@ export function JobStatusTracker({ jobId }: { jobId: string }) {
                 v{job.result.version}
               </span>
             </div>
+            {job.result.chunkingStrategy && (
+              <div>
+                Strategy:{" "}
+                <span className="font-semibold text-foreground font-mono">
+                  {job.result.chunkingStrategy}
+                </span>
+              </div>
+            )}
             {job.result.processedAt && (
               <div className="col-span-2 sm:col-span-1 truncate">
                 Processed:{" "}

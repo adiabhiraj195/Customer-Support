@@ -58,7 +58,10 @@ export interface MessageMetadata {
   pipelineStats?: PipelineStats;
   originalQuery?: string;
   rewrittenQuery?: string;
-  queryRewriteStatus?: string;
+  queryRewriteStatus?: "clear" | "rewritten" | "clarify" | "hyde" | string;
+  hydeApplied?: boolean;
+  hypotheticalDocument?: string | null;
+  status?: string;
 }
 
 export interface Message {
@@ -112,6 +115,7 @@ export interface SendMessageRequest {
   message: string;
   content?: string;
   query?: string;
+  HyDE?: boolean;
   topK?: number;
   rrfK?: number;
 }
@@ -127,7 +131,11 @@ export interface SendMessageResponse {
     answer?: string;
     sources?: MessageSource[];
     pipelineStats?: PipelineStats;
+    originalQuery?: string;
     rewrittenQuery?: string;
+    queryRewriteStatus?: string;
+    hydeApplied?: boolean;
+    hypotheticalDocument?: string | null;
     status?: string;
     clarification?: string;
   };
@@ -158,6 +166,20 @@ export interface UploadUrlResponse {
   };
 }
 
+export interface ChunkingStrategyItem {
+  name: string;
+  displayName: string;
+  description: string;
+}
+
+export interface ChunkingStrategiesResponse {
+  success: boolean;
+  data: {
+    strategies: ChunkingStrategyItem[];
+    default: string;
+  };
+}
+
 export interface IngestRequest {
   s3Key: string;
   filename?: string;
@@ -165,6 +187,7 @@ export interface IngestRequest {
   documentId?: string;
   userId?: string;
   version?: number;
+  chunkingStrategy?: string;
   chunkSize?: number;
   chunkOverlap?: number;
   metadata?: Record<string, unknown>;
@@ -184,6 +207,7 @@ export interface IngestResponse {
     mimeType?: string;
     chunkSize?: number;
     chunkOverlap?: number;
+    chunkingStrategy?: string;
   };
 }
 
@@ -201,6 +225,7 @@ export interface JobStatusResponse {
       totalChunks?: number;
       processedAt?: string;
       source?: string;
+      chunkingStrategy?: string;
     };
     failedReason?: string;
     timestamp?: number;
@@ -211,6 +236,7 @@ export interface JobStatusResponse {
 
 export interface StatelessChatRequest {
   query: string;
+  HyDE?: boolean;
   topK?: number;
   rrfK?: number;
   userId?: string;
@@ -232,6 +258,8 @@ export interface StatelessChatResponse {
     originalQuery?: string;
     rewrittenQuery?: string;
     queryRewriteStatus?: string;
+    hydeApplied?: boolean;
+    hypotheticalDocument?: string | null;
   };
 }
 

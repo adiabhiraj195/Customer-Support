@@ -1,15 +1,18 @@
 "use client";
 
-import { AlertCircle, Bot, CornerDownRight, User } from "lucide-react";
+import { useState } from "react";
+import { AlertCircle, Bot, CornerDownRight, Sparkles, User } from "lucide-react";
 import { Message } from "@/types/api";
 import { SourcesAccordion } from "./SourcesAccordion";
 import { PipelineStatsBadge } from "./PipelineStatsBadge";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 
 export function MessageBubble({ message }: { message: Message }) {
+  const [showHydeDoc, setShowHydeDoc] = useState(false);
   const isUser = message.role === "user";
   const metadata = message.metadata;
   const isClarify = metadata?.queryRewriteStatus === "clarify";
+  const isHyde = metadata?.hydeApplied || metadata?.queryRewriteStatus === "hyde";
 
   const formattedTime = new Date(message.createdAt).toLocaleTimeString([], {
     hour: "2-digit",
@@ -33,8 +36,32 @@ export function MessageBubble({ message }: { message: Message }) {
           isUser ? "items-end" : "items-start"
         }`}
       >
-        {/* Rewritten Query Tag */}
-        {!isUser && metadata?.rewrittenQuery && metadata.rewrittenQuery !== metadata.originalQuery && (
+        {/* HyDE / Rewritten Query Tag */}
+        {!isUser && isHyde && (
+          <div className="mb-2 flex flex-col items-start gap-1">
+            <div className="flex items-center gap-1.5 text-[11px] bg-primary-subtle text-primary border border-primary-border px-2.5 py-1 rounded-md font-medium">
+              <Sparkles className="h-3.5 w-3.5 text-primary shrink-0" />
+              <span>HyDE Query Rewrite Applied</span>
+              {metadata?.hypotheticalDocument && (
+                <button
+                  type="button"
+                  onClick={() => setShowHydeDoc(!showHydeDoc)}
+                  className="ml-1 text-[10px] font-semibold underline underline-offset-2 hover:opacity-80 transition cursor-pointer"
+                >
+                  {showHydeDoc ? "Hide Hypothetical Passage" : "View Hypothetical Passage"}
+                </button>
+              )}
+            </div>
+            {showHydeDoc && metadata?.hypotheticalDocument && (
+              <div className="p-2.5 rounded-lg bg-muted text-[11px] font-mono text-foreground border border-border max-w-sm sm:max-w-md max-h-40 overflow-y-auto whitespace-pre-wrap">
+                {metadata.hypotheticalDocument}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Standard Rewritten Query Tag (if not HyDE) */}
+        {!isUser && !isHyde && metadata?.rewrittenQuery && metadata.rewrittenQuery !== metadata.originalQuery && (
           <div className="mb-1 flex items-center gap-1 text-[11px] text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
             <CornerDownRight className="h-3 w-3 text-primary" />
             <span className="font-medium">Query Rewritten:</span>

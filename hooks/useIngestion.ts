@@ -3,13 +3,18 @@
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  getChunkingStrategies,
   getJobStatus,
   getUploadUrl,
   queueIngestion,
   uploadFileToS3,
 } from "@/lib/api/rag.api";
 import { useAuthStore } from "@/stores/authStore";
-import { IngestResponse, JobStatusResponse } from "@/types/api";
+import {
+  ChunkingStrategiesResponse,
+  IngestResponse,
+  JobStatusResponse,
+} from "@/types/api";
 
 export type UploadStage =
   | "idle"
@@ -21,6 +26,7 @@ export type UploadStage =
 
 export interface UploadAndIngestParams {
   file: File;
+  chunkingStrategy?: string;
   chunkSize?: number;
   chunkOverlap?: number;
   metadata?: Record<string, unknown>;
@@ -34,6 +40,7 @@ export function useIngestion() {
   const uploadAndQueueMutation = useMutation({
     mutationFn: async ({
       file,
+      chunkingStrategy,
       chunkSize,
       chunkOverlap,
       metadata,
@@ -42,7 +49,16 @@ export function useIngestion() {
       try {
         // Step 1: Request S3 presigned URL (POST /rag/upload-url)
         setStage("requesting_url");
-        const mimeType = file.type || "text/plain";
+        const mimeType =
+          file.type ||
+          (file.name.toLowerCase().endsWith(".pdf")
+            ? "application/pdf"
+            : file.name.toLowerCase().endsWith(".json")
+            ? "application/json"
+            : file.name.toLowerCase().endsWith(".csv")
+            ? "text/csv"
+            : "text/plain");
+
         const uploadUrlRes = await getUploadUrl({
           filename: file.name,
           mimeType,
@@ -73,6 +89,7 @@ export function useIngestion() {
           mimeType,
           userId: user?.id,
           version,
+          chunkingStrategy,
           chunkSize,
           chunkOverlap,
           metadata,
@@ -99,6 +116,17 @@ export function useIngestion() {
     resetUpload,
     stage,
   };
+}
+
+export function useChunkingStrategies() {
+  return useQuery<ChunkingStrategiesResponse["data"]>({
+    queryKey: ["chunkingStrategies"],
+    queryFn: async () => {
+      const res = await getChunkingStrategies();
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  });
 }
 
 export function useJobStatus(jobId: string | null) {
