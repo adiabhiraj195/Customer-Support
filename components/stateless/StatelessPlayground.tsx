@@ -20,6 +20,8 @@ export function StatelessPlayground() {
   const { user } = useAuthStore();
 
   const [query, setQuery] = useState("");
+  const [hydeEnabled, setHydeEnabled] = useState(false);
+  const [showHydeDoc, setShowHydeDoc] = useState(false);
   const [topK, setTopK] = useState(5);
   const [rrfK, setRrfK] = useState(60);
   const [filterUserOnly, setFilterUserOnly] = useState(false);
@@ -32,6 +34,7 @@ export function StatelessPlayground() {
     try {
       await ask({
         query: query.trim(),
+        HyDE: hydeEnabled,
         topK: Number(topK),
         rrfK: Number(rrfK),
         userId: filterUserOnly && user?.id ? user.id : undefined,
@@ -126,6 +129,57 @@ export function StatelessPlayground() {
             </div>
           </div>
 
+          {/* HyDE Option Toggle */}
+          <div className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-muted/30">
+            <div className="flex items-start gap-2.5">
+              <div
+                className={`p-1.5 rounded-lg transition-colors ${
+                  hydeEnabled
+                    ? "bg-primary-subtle text-primary"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-foreground">
+                    HyDE (Hypothetical Document Embeddings)
+                  </span>
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase transition-colors ${
+                      hydeEnabled
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {hydeEnabled ? "Enabled" : "Disabled"}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  Rewrite query into an authoritative hypothetical document before vector retrieval for higher semantic match accuracy.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setHydeEnabled(!hydeEnabled)}
+              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                hydeEnabled ? "bg-primary" : "bg-muted-foreground/30"
+              }`}
+              role="switch"
+              aria-checked={hydeEnabled}
+              title="Toggle HyDE Query Rewrite"
+            >
+              <span
+                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+                  hydeEnabled ? "translate-x-4" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
           <button
             type="submit"
             disabled={!query.trim() || isLoading}
@@ -161,15 +215,40 @@ export function StatelessPlayground() {
             )}
           </div>
 
-          {/* Rewritten query banner if any */}
-          {responseData.rewrittenQuery &&
+          {/* HyDE / Rewritten Query Banner */}
+          {(responseData.hydeApplied || responseData.queryRewriteStatus === "hyde") ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs bg-primary-subtle text-primary border border-primary-border p-2.5 rounded-xl font-medium">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                  <span>HyDE Applied (Hypothetical Document Embeddings)</span>
+                </div>
+                {responseData.hypotheticalDocument && (
+                  <button
+                    type="button"
+                    onClick={() => setShowHydeDoc(!showHydeDoc)}
+                    className="text-[11px] font-semibold underline underline-offset-2 hover:opacity-80 transition cursor-pointer"
+                  >
+                    {showHydeDoc ? "Hide Hypothetical Passage" : "View Hypothetical Passage"}
+                  </button>
+                )}
+              </div>
+              {showHydeDoc && responseData.hypotheticalDocument && (
+                <div className="p-3 rounded-xl bg-muted text-[11px] font-mono text-foreground border border-border whitespace-pre-wrap max-h-56 overflow-y-auto">
+                  {responseData.hypotheticalDocument}
+                </div>
+              )}
+            </div>
+          ) : (
+            responseData.rewrittenQuery &&
             responseData.rewrittenQuery !== responseData.originalQuery && (
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 p-2.5 rounded-xl border border-border">
                 <CornerDownRight className="h-3.5 w-3.5 text-primary" />
                 <span className="font-semibold">Rewritten Query:</span>
                 <span>&quot;{responseData.rewrittenQuery}&quot;</span>
               </div>
-            )}
+            )
+          )}
 
           {/* Clarification Alert if model asked for clarify */}
           {isClarification && (

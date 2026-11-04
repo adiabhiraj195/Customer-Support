@@ -31,7 +31,7 @@ export default function KnowledgeBasePage() {
               Knowledge Base Ingestion
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Upload raw text, markdown, or CSV files to enrich the vector knowledge base.
+              Upload PDF, raw text, markdown, or CSV files to enrich the vector knowledge base.
             </p>
           </div>
           <Link
